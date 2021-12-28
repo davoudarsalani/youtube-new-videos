@@ -1,0 +1,22 @@
+name: Jadi
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */2 * * *'  ## every 2 hours
+
+jobs:
+  jadi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Checking for new videos
+        uses: ./.github/actions/google-api-python-client
+        with:
+          owner: 'jadi'
+          channel_id: 'UCgKePkWtPuF36bJy0n2cEMQ'
+          google_api: ${{ secrets.API_JADI }}
+          TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
