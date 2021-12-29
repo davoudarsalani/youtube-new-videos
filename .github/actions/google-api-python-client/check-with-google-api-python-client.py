@@ -14,24 +14,23 @@ urls = []
 
 
 def getopts() -> None:
-    global count_last, channel_id, last_file, error_file, titles_file, api_key
+    global count_last, channel_id, last_file, titles_file, api_key
 
     try:
         duos, duos_long = getopt(
             script_args,
-            'l:c:f:e:t:a:',
+            'l:c:f:t:a:',
             [
                 'count-last=',
                 'channel-id=',
                 'last-file=',
-                'error-file=',
                 'titles-file=',
                 'api-key=',
             ],
         )
     except Exception as exc:
-        save_error(f'{exc!r}')
-        exit()
+        print(f'ERROR: {exc!r}')
+        exit(1)
 
     for opt, arg in duos:
         if opt in ('-l', '--count-last'):
@@ -40,17 +39,10 @@ def getopts() -> None:
             channel_id = arg
         elif opt in ('-f', '--last-file'):
             last_file = arg
-        elif opt in ('-e', '--error-file'):
-            error_file = arg
         elif opt in ('-t', '--titles-file'):
             titles_file = arg
         elif opt in ('-a', '--api-key'):
             api_key = arg
-
-
-def save_error(text):
-    with open(error_file, 'w') as opened_error_file:
-        opened_error_file.write(text)
 
 
 def convert_duration(seconds: int) -> str:
@@ -121,9 +113,7 @@ try:
                 opened_titles_file.write(message_text)
 
         except Exception as exc:
-            ## save error
-            save_error(f'{exc!r}')
+            print(f'ERROR: {exc!r}')
 
 except Exception as exc:
-    ## save error
-    save_error(f'{exc!r}')
+    print(f'ERROR: {exc!r}')

@@ -36,10 +36,8 @@ runs:
       shell: bash
       run: |
         last_file=./last-files/${{ inputs.owner }}
-        error_file=./last-files/${{ inputs.owner }}_error
         titles_file=./last-files/${{ inputs.owner }}_titles
         echo "last_file=$last_file" >> $GITHUB_ENV
-        echo "error_file=$error_file" >> $GITHUB_ENV
         echo "titles_file=$titles_file" >> $GITHUB_ENV
 
         [ -f "$last_file" ] || {
@@ -53,12 +51,11 @@ runs:
           --count-last="$count_last" \
           --channel-id=${{ inputs.channel_id }} \
           --last-file="$last_file" \
-          --error-file="$error_file" \
           --titles-file="$titles_file" \
           --api-key=${{ inputs.google_api }}
 
-    - name: Checking for new videos or errors
-      id: newvideo-error
+    - name: Checking for new videos
+      id: newvideo
       shell: bash
       run: |
         ## get titles if any
@@ -71,18 +68,8 @@ runs:
           echo "::set-output name=found::true"
         fi
 
-        ## get errors if any
-        if [ -f ${{ env.error_file }} ]; then
-          ## JUMP_1 save a multi-line variable into $GITHUB_ENV:
-          echo 'msg_text<<EOF' >> $GITHUB_ENV
-          cat ${{ env.error_file }} >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-
-          echo "::set-output name=found::true"
-        fi
-
     - name: Notifying
-      if: ${{ steps.newvideo-error.outputs.found == 'true' && inputs.notify == 'true' }}
+      if: ${{ steps.newvideo.outputs.found == 'true' && inputs.notify == 'true' }}
       uses: davoudarsalani/action-notify@master
       with:
         telegram_message: |
@@ -92,7 +79,7 @@ runs:
         TELEGRAM_TO: ${{ inputs.TELEGRAM_TO }}
 
     - name: Committing changes
-      if: ${{ steps.newvideo-error.outputs.found == 'true' }}
+      if: ${{ steps.newvideo.outputs.found == 'true' }}
       uses: davoudarsalani/action--git-push@master
       with:
         file_pattern: ${{ env.last_file }}
