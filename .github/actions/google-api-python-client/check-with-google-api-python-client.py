@@ -23,13 +23,7 @@ def getopts() -> None:
         duos, duos_long = getopt(
             script_args,
             'l:c:f:t:a:',
-            [
-                'count-last=',
-                'channel-id=',
-                'last-file=',
-                'titles-file=',
-                'api-key=',
-            ],
+            ['count-last=', 'channel-id=', 'last-file=', 'titles-file=', 'api-key='],
         )
     except Exception as exc:
         print(f'ERROR: {exc!r}')
