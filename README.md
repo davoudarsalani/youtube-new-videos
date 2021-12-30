@@ -12,8 +12,8 @@
 - name: Checking for new videos
   uses: ./.github/actions/google-api-python-client
   with:
-    owner:  ## owner of channel
-    channel_id: ## channel id
+    owner:
+    channel_id:
     google_api: ${{ secrets.GOOGLE_API }}
     TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
     TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
