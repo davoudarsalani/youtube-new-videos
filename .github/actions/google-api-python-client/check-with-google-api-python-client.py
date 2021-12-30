@@ -4,6 +4,7 @@
 
 from functools import partial
 from getopt import getopt
+from subprocess import run
 from sys import argv
 from urllib.request import urlopen
 
@@ -68,9 +69,17 @@ try:
 
         ## download gp.py to use convert_second function (borrowed from download.py script)
         gp_response = urlopen('https://raw.githubusercontent.com/davoudarsalani/scripts/master/gp.py')
-        with open(f'gp.py', 'wb') as opened_gp:
+        with open(f'./.github/actions/google-api-python-client/gp.py', 'wb') as opened_gp:
             for chunk in iter(partial(gp_response.read, 8192), b''):  ## 8192 is 8KB
                 opened_gp.write(chunk)
+        ## now a sloppy trick to remove everything other than convert_second function to prevent ModuleNotFoundError:
+        ## step 1: remove everythin before pattern
+        run("sed -i -n '/^def convert_second/,$p' ./.github/actions/google-api-python-client/gp.py", shell=True)
+        ## step 2: remove everything after pattern (2,$ means ignore the first occurrence)
+        ##         (had to put the commad inside {} to prevent the error: sed: -e expression #1, char 4: unknown command: `/')
+        ##         (https://stackoverflow.com/questions/6869449/skipping-the-first-n-lines-when-using-regex-with-sed)
+        run("sed -i '2,${ /^def /,$d }' ./.github/actions/google-api-python-client/gp.py", shell=True)
+        ## now we can import
         from gp import convert_second
 
         ## get urls
