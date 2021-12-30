@@ -2,8 +2,10 @@
 
 ## this is a slightly modified version of jadi.py in davoudarsalani/scripts repository
 
+from functools import partial
 from getopt import getopt
 from sys import argv
+from urllib.request import urlopen
 
 from googleapiclient.discovery import build
 from youtube_dl import YoutubeDL
@@ -45,15 +47,6 @@ def getopts() -> None:
             api_key = arg
 
 
-def convert_duration(seconds: int) -> str:
-    seconds = int(seconds)
-    ss = f'{int(seconds % 60):02}'
-    mm = f'{int(seconds / 60 % 60):02}'
-    hh = f'{int(seconds / 3600 % 24):02}'
-
-    return f'{hh}:{mm}:{ss}'
-
-
 getopts()
 
 try:
@@ -72,6 +65,13 @@ try:
     ## compare
     diff = count - count_last
     if diff > 0:
+
+        ## download gp.py to use convert_second function (borrowed from download.py script)
+        gp_response = urlopen('https://raw.githubusercontent.com/davoudarsalani/scripts/master/gp.py')
+        with open(f'./gp.py', 'wb') as opened_gp:
+            for chunk in iter(partial(gp_response.read, 8192), b''):  ## 8192 is 8KB
+                opened_gp.write(chunk)
+        from gp import convert_second
 
         ## get urls
         try:
@@ -102,10 +102,10 @@ try:
                     # opened_youtubedl.cache.remove()
                     video_obj = opened_youtubedl.extract_info(u, download=False)
                     title = video_obj['title']
-                    duration = video_obj['duration']  ## 41
-                    duration = convert_duration(duration)  ## 00:00:41
+                    vid_duration = video_obj['duration']  ## 41
+                    vid_duration = convert_second(vid_duration)  ## 00:00:41
 
-                    message_text = f'{message_text}{title}\n{duration}\n{u}\n\n'
+                    message_text = f'{message_text}{title}\n{vid_duration}\n{u}\n\n'
 
             ## write info to titles_file
             message_text = f'{message_text.strip()}\n'
