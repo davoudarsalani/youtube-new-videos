@@ -18,11 +18,8 @@ inputs:
     required: false
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-
     - name: Setting up python
       uses: actions/setup-python@v2
 
