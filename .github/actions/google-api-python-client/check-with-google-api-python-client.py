@@ -60,7 +60,7 @@ def main():
 
             ## download gp.py to use convert_second function (borrowed from download.py script)
             gp_response = urlopen('https://raw.githubusercontent.com/davoudarsalani/scripts/master/gp.py')
-            with open(f'./.github/actions/google-api-python-client/gp.py', 'wb') as opened_gp:
+            with open('./.github/actions/google-api-python-client/gp.py', 'wb') as opened_gp:
                 for chunk in iter(partial(gp_response.read, 8192), b''):  ## 8192 is 8KB
                     opened_gp.write(chunk)
             ## now a sloppy trick to remove everything other than convert_second function to prevent ModuleNotFoundError:
