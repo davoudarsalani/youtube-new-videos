@@ -25,9 +25,7 @@ runs:
 
     - name: Installing python modules
       shell: bash
-      run: |
-        pip install --upgrade pip
-        pip install -r ./.github/actions/google-api-python-client/requirements.txt
+      run: pip install --upgrade -r ./.github/actions/google-api-python-client/requirements.txt pip
 
     - name: Checking
       shell: bash
