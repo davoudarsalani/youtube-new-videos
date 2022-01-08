@@ -53,7 +53,6 @@ runs:
       id: newvideo
       shell: bash
       run: |
-        ## get titles if any
         if [ -f ${{ env.titles_file }} ]; then
           ## save a multi-line variable into $GITHUB_ENV:
           echo 'msg_text<<EOF' >> $GITHUB_ENV
@@ -73,8 +72,8 @@ runs:
         TELEGRAM_TOKEN: ${{ inputs.TELEGRAM_TOKEN }}
         TELEGRAM_TO: ${{ inputs.TELEGRAM_TO }}
 
-    - name: Committing changes
+    - name: Pushing changes
       if: ${{ steps.newvideo.outputs.found == 'true' }}
-      uses: davoudarsalani/action--git-push@master
+      uses: davoudarsalani/action-push@master
       with:
-        file_pattern: ${{ env.last_file }}
+        pattern: ${{ env.last_file }}
