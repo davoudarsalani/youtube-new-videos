@@ -55,7 +55,7 @@ runs:
       run: |
         ## get titles if any
         if [ -f ${{ env.titles_file }} ]; then
-          ## JUMP_1 save a multi-line variable into $GITHUB_ENV:
+          ## save a multi-line variable into $GITHUB_ENV:
           echo 'msg_text<<EOF' >> $GITHUB_ENV
           cat ${{ env.titles_file }} >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
