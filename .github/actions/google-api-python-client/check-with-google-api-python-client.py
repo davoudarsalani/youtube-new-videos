@@ -97,6 +97,7 @@ def main():
                 }
 
                 ## get title and duration
+                message_text = ''
                 for u in urls:
                     with YoutubeDL(options) as opened_youtubedl:
                         # opened_youtubedl.cache.remove()
@@ -121,7 +122,6 @@ def main():
 
 if __name__ == '__main__':
     script_args = argv[1:]
-    message_text = ''
     urls = []
 
     main()
