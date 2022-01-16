@@ -76,4 +76,4 @@ runs:
       if: ${{ steps.newvideo.outputs.found == 'true' }}
       uses: davoudarsalani/action-push@master
       with:
-        pattern: ${{ env.last_file }}
+        file_pattern: ${{ env.last_file }}
